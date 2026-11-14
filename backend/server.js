@@ -1,30 +1,33 @@
+require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Portfolio projects
-const projects = [
-    {
-        name: "MARG",
-        description: "A platform that helps mentors record classroom observations and guide teachers."
-    },
-    {
-        name: "Digital Literacy for Elderly People",
-        description: "A website that helps elderly people learn digital skills through regional language support and videos."
-    }
-];
+// Connect to Supabase
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+);
 
-// Get all projects
-app.get("/api/projects", (req, res) => {
-    res.json(projects);
+// Get projects from Supabase
+app.get("/api/projects", async (req, res) => {
+    const { data, error } = await supabase
+        .from("projects")
+        .select("*");
+
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    res.json(data);
 });
 
-// Start server
 app.listen(5000, () => {
     console.log("Server running at http://localhost:5000");
 });
