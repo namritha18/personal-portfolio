@@ -18,9 +18,8 @@ const supabase = createClient(
 // Get projects from Supabase
 app.get("/api/projects", async (req, res) => {
     const { data, error } = await supabase
-        .from("projects")
-        .select("*");
-
+    .from("projects")
+    .select("*")
     if (error) {
         return res.status(500).json({ error: error.message });
     }
@@ -28,6 +27,8 @@ app.get("/api/projects", async (req, res) => {
     res.json(data);
 });
 
-app.listen(5000, () => {
-    console.log("Server running at http://localhost:5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
