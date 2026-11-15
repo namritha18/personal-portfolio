@@ -20,6 +20,7 @@ app.get("/api/projects", async (req, res) => {
     const { data, error } = await supabase
     .from("projects")
     .select("*")
+    .order("id", { ascending: true });
     if (error) {
         return res.status(500).json({ error: error.message });
     }
